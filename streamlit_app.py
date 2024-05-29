@@ -1,38 +1,28 @@
 import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
+from openai import OpenAI
 
-# Cargar datos
-data = pd.read_csv('IMDB-Movie-Data.csv')
+st.title("ChatGPT-like clone")
 
-# Verificar si la columna 'Title' existe en el DataFrame
-if 'Title' not in data.columns:
-    st.error('La columna "Title" no existe en el DataFrame.')
-    st.stop()
+# Set OpenAI API key from Streamlit secrets
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# Título de la aplicación
-st.title('Visualizador de Películas')
+# Set a default model
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
 
-# Selección de película
-selected_movie = st.selectbox('Selecciona una película', data['Title'].unique())
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Mostrar información de la película seleccionada
-movie_data = data[data['Title'] == selected_movie]
-st.write('Descripción:', movie_data['Description'].iloc[0])
-st.write('Director:', movie_data['Director'].iloc[0])
-st.write('Actores:', movie_data['Actors'].iloc[0])
-st.write('Año:', movie_data['Year'].iloc[0])
-st.write('Duración:', movie_data['Runtime (Minutes)'].iloc[0], 'minutos')
-st.write('Calificación:', movie_data['Rating'].iloc[0])
-st.write('Votos:', movie_data['Votes'].iloc[0])
-st.write('Ingresos (Millones): $', movie_data['Revenue (Millions)'].iloc[0])
-st.write('Metascore:', movie_data['Metascore'].iloc[0])
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-# Gráfico de películas por año
-st.subheader('Número de Películas por Año')
-fig, ax = plt.subplots()
-data['Year'].value_counts().sort_index().plot(kind='bar', ax=ax)
-ax.set_xlabel('Año')
-ax.set_ylabel('Número de Películas')
-ax.set_title('Películas por Año de Estreno')
-st.pyplot(fig)
+# Accept user input
+if prompt := st.chat_input("What is up?"):
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
