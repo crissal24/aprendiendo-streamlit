@@ -2,15 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Cargar datos
-@st.cache
-def load_data():
-    data = pd.read_csv('IMDB-Movie-Data.csv')
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-data = load_data()
-
+data = pd.read_csv('IMDB-Movie-Data.csv')
 if 'Title' in data.columns:
     selected_movie = st.selectbox('Selecciona una película', data['Title'].unique())
 else:
