@@ -11,6 +11,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 data = load_data()
 
+if 'Title' in data.columns:
+    selected_movie = st.selectbox('Selecciona una película', data['Title'].unique())
+else:
+    st.error('La columna "Title" no existe en el DataFrame.')
 # Título de la aplicación
 st.title('Visualizador de Películas')
 
