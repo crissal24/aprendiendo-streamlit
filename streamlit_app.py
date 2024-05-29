@@ -2,11 +2,14 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Cargar datos
 data = pd.read_csv('IMDB-Movie-Data.csv')
-if 'Title' in data.columns:
-    selected_movie = st.selectbox('Selecciona una película', data['Title'].unique())
-else:
+
+# Verificar si la columna 'Title' existe en el DataFrame
+if 'Title' not in data.columns:
     st.error('La columna "Title" no existe en el DataFrame.')
+    st.stop()
+
 # Título de la aplicación
 st.title('Visualizador de Películas')
 
