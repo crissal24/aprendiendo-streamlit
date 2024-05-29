@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Cargar datos
 @st.cache
 def load_data():
-    data = pd.read_csv('IMDB-Movie-Data.csv'
+    data = pd.read_csv('IMDB-Movie-Data.csv')
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
